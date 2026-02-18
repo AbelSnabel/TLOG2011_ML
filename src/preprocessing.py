@@ -17,19 +17,10 @@ def get_preprocess():
     df = df[df['grab_lat'] != 0]
     df = df[df['grab_lng'] != 0]
 
-    tolerance = 10    
-    late_delivery = []
-    for index, row in df.iterrows():
-        row_lateness = [1 if row["arrive_time"] > (row["estimate_arrived_time"] + tolerance) else 0]
-        late_delivery.append(row_lateness)
-    late_delivery = pd.DataFrame(late_delivery)
-    df = pd.concat([df,late_delivery],axis=1)
+    df = df.drop('is_courier_grabbed',axis=1)
 
+    tolerance = 5*60
 
-    train_data = df[0:int(len(df)*0.80)]
-    test_data = df[int(len(df)*0.80):]
+    df["lateness"] = (df["arrive_time"] > df["estimate_arrived_time"] + tolerance).astype(int)
 
-    return train_data, test_data, df
-
-
-get_preprocess()
+    return df
