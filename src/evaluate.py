@@ -12,5 +12,5 @@ def confuse(target, predictions):
              recall_score(target[1],predictions),
              ]
 
-    disp = ConfusionMatrixDisplay(confusion_matrix=confusion_matrix, display_labels=['Class 0', 'Class 1']) 
+    disp = ConfusionMatrixDisplay(confusion_matrix=confusion_matrix, display_labels=['On time', 'Late']) 
     return confusion_matrix, disp, stats
