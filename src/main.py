@@ -1,9 +1,9 @@
-from preprocessing import get_preprocess, random_undersample
+from preprocessing import get_preprocess
 from features import get_features
-from train import split, initializeLG, predicateLG, initializeRTC, predicateRTC, initializeXGB, predicateXGB
-from evaluate import confuse, auc
-from sklearn import tree
+from train import split, initializeXGB, predicateXGB
+from evaluate import confuse
 import matplotlib.pyplot as plt
+
 
 df = get_preprocess()
 features, target = get_features(df)
@@ -28,7 +28,7 @@ print("acc, prec, rec equals", statistics)
 
 XGB = initializeXGB(features, target)
 
-predictionsXGB = predicateXGB(features, target, XGB)
+predictionsXGB = predicateXGB(features, target, XGB, 0.7)
 
 confusion_matrix, disp_confusion_matrix, statistics = confuse(target, predictionsXGB)
 

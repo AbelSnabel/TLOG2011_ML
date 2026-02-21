@@ -1,4 +1,3 @@
-import numpy as np
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
@@ -15,7 +14,7 @@ def initializeLG(features, target):
     """
     initializes logreg model using features, target. returns the initialized and fitted logreg model
     """
-    lg = LogisticRegression(verbose=False,max_iter=1500)
+    lg = LogisticRegression(verbose=False, max_iter=1500, class_weight="balanced")
 
     lg.fit(features[0], target[0])
 
@@ -51,13 +50,17 @@ def initializeXGB(features, target):
 
     print(scale_pos_weight)
 
-    xgb = XGBClassifier(n_estimators=2500, max_depth=5, learning_rate=0.08, objective='binary:logistic', scale_pos_weight = scale_pos_weight, eval_metric = "rmse")
+    xgb = XGBClassifier(n_estimators=4000, max_depth=8, learning_rate=0.03, objective='binary:logistic', scale_pos_weight = scale_pos_weight, eval_metric = "error")
 
     xgb.fit(features[0], target[0])
 
     return xgb
 
-def predicateXGB(features, target, xgb):
-    predictions = xgb.predict(features[1])
+def predicateXGB(features, target, xgb, threshold=0.5):
+
+    X_test = features[1]
+
+    probs = xgb.predict_proba(X_test)[:, 1]
+    predictions = (probs > threshold).astype(int)
 
     return predictions
